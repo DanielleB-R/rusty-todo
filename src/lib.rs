@@ -24,23 +24,15 @@ fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
     }
 }
 
-// ------ ------
-//    Update
-// ------ ------
-
-// (Remove the line below once any of your `Msg` variants doesn't implement `Copy`.)
 #[derive(Copy, Clone)]
-// `Msg` describes the different events you can modify state with.
 enum Msg {
-    Increment,
-    Decrement,
+    Toggle(usize),
 }
 
 // `update` describes how to handle each `Msg`.
 fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
     match msg {
-        Msg::Increment => (),
-        Msg::Decrement => (),
+        Msg::Toggle(idx) => model.items[idx].checked = !model.items[idx].checked,
     }
 }
 
@@ -51,8 +43,12 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
 static CHECKED: &str = "✔️";
 static UNCHECKED: &str = "❌";
 
-fn todo_item_view(item: &TodoItem) -> Node<Msg> {
-    li![if item.checked { CHECKED } else { UNCHECKED }, &item.name]
+fn todo_item_view((i, item): (usize, &TodoItem)) -> Node<Msg> {
+    li![
+        if item.checked { CHECKED } else { UNCHECKED },
+        button!["toggle", ev(Ev::Click, move |_| Msg::Toggle(i))],
+        &item.name
+    ]
 }
 
 // `view` describes what to display.
@@ -62,6 +58,7 @@ fn view(model: &Model) -> Node<Msg> {
         ul![model
             .items
             .iter()
+            .enumerate()
             .map(todo_item_view)
             .collect::<Vec<Node<Msg>>>()]
     ]]
