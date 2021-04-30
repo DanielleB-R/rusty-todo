@@ -1,8 +1,8 @@
 [package]
 version = "0.1.0"
-name = "{{project-name}}"
-repository = "https://github.com/seed-rs/seed-quickstart"
-authors = ["{{authors}}"]
+name = "rusty-todo"
+repository = "https://github.com/DanielleB-R/rusty-todo"
+authors = ["Danielle Brook-Roberge"]
 description = "App Description"
 categories = ["category"]
 license = "MIT"
