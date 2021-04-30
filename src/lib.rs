@@ -11,16 +11,33 @@ use seed::{prelude::*, *};
 
 // `init` describes what should happen when your app started.
 fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
-    Model { counter: 7 }
+    Model {
+        counter: 7,
+        items: vec![
+            TodoItem {
+                name: "Implement the Model field".to_owned(),
+                checked: true,
+            },
+            TodoItem {
+                name: "Implement the view".to_owned(),
+                checked: false,
+            },
+            TodoItem {
+                name: "Implement actions".to_owned(),
+                checked: false,
+            },
+        ],
+    }
 }
 
-// ------ ------
-//     Model
-// ------ ------
+struct TodoItem {
+    name: String,
+    checked: bool,
+}
 
-// `Model` describes our app state.
 struct Model {
     counter: i32,
+    items: Vec<TodoItem>,
 }
 
 // ------ ------
@@ -47,14 +64,31 @@ fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
 //     View
 // ------ ------
 
+static CHECKED: &str = "✔️";
+static UNCHECKED: &str = "❌";
+
+fn todo_item_view(item: &TodoItem) -> Node<Msg> {
+    li![if item.checked { CHECKED } else { UNCHECKED }, &item.name]
+}
+
 // `view` describes what to display.
 fn view(model: &Model) -> Node<Msg> {
     div![
-        "This is a counter: ",
-        C!["counter"],
-        model.counter,
-        button!["Increment", ev(Ev::Click, |_| Msg::Increment),],
-        button!["Decrement", ev(Ev::Click, |_| Msg::Decrement),],
+        div![
+            "This is a counter: ",
+            C!["counter"],
+            model.counter,
+            button!["Increment", ev(Ev::Click, |_| Msg::Increment),],
+            button!["Decrement", ev(Ev::Click, |_| Msg::Decrement),]
+        ],
+        div![
+            h1!["Todo List"],
+            ul![model
+                .items
+                .iter()
+                .map(todo_item_view)
+                .collect::<Vec<Node<Msg>>>()]
+        ]
     ]
 }
 
