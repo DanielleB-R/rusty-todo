@@ -1,18 +1,12 @@
-// (Lines like the one below ignore selected Clippy rules
-//  - it's useful when you want to check your code with `cargo make verify`
-// but some rules are too "annoying" or are not applicable for your case.)
 #![allow(clippy::wildcard_imports)]
 
+mod model;
+
+use crate::model::{Model, TodoItem};
 use seed::{prelude::*, *};
 
-// ------ ------
-//     Init
-// ------ ------
-
-// `init` describes what should happen when your app started.
 fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
     Model {
-        counter: 7,
         items: vec![
             TodoItem {
                 name: "Implement the Model field".to_owned(),
@@ -30,16 +24,6 @@ fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
     }
 }
 
-struct TodoItem {
-    name: String,
-    checked: bool,
-}
-
-struct Model {
-    counter: i32,
-    items: Vec<TodoItem>,
-}
-
 // ------ ------
 //    Update
 // ------ ------
@@ -55,8 +39,8 @@ enum Msg {
 // `update` describes how to handle each `Msg`.
 fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
     match msg {
-        Msg::Increment => model.counter += 1,
-        Msg::Decrement => model.counter -= 1,
+        Msg::Increment => (),
+        Msg::Decrement => (),
     }
 }
 
@@ -73,23 +57,14 @@ fn todo_item_view(item: &TodoItem) -> Node<Msg> {
 
 // `view` describes what to display.
 fn view(model: &Model) -> Node<Msg> {
-    div![
-        div![
-            "This is a counter: ",
-            C!["counter"],
-            model.counter,
-            button!["Increment", ev(Ev::Click, |_| Msg::Increment),],
-            button!["Decrement", ev(Ev::Click, |_| Msg::Decrement),]
-        ],
-        div![
-            h1!["Todo List"],
-            ul![model
-                .items
-                .iter()
-                .map(todo_item_view)
-                .collect::<Vec<Node<Msg>>>()]
-        ]
-    ]
+    div![div![
+        h1!["Todo List"],
+        ul![model
+            .items
+            .iter()
+            .map(todo_item_view)
+            .collect::<Vec<Node<Msg>>>()]
+    ]]
 }
 
 // ------ ------
